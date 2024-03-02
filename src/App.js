@@ -1,23 +1,35 @@
-import logo from './logo.svg';
-import './App.css';
+import { useEffect, useState } from "react";
+import "./App.css";
+
+import Card from "./components/Card";
+import Header from "./components/Header";
 
 function App() {
+  const [usersData, setUsersData] = useState([]);
+
+  useEffect(() => {
+    fetch("https://api.github.com/users")
+      .then((res) => res.json())
+      .then((data) => setUsersData(data))
+      .catch((err) => console.log(err));
+  }, []);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Header />
+
+      <hr />
+
+      <div className="cards-container">
+        {usersData?.map((c) => (
+          <Card
+            key={c.id}
+            avatar_url={c.avatar_url}
+            login={c.login}
+            html_url={c.html_url}
+          />
+        ))}
+      </div>
     </div>
   );
 }
